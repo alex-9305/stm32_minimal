@@ -1,4 +1,5 @@
 /* Main program. */
+
 int main(void)
 {
     int val = 0;
