@@ -5,8 +5,8 @@
 .global vtable
 .global default_interrupt_handler
 /*
-    * The vector table.
-    */
+* The vector table.
+*/
 .type vtable, %object
 .section .vector_table,"a",%progbits
 vtable: /* ref man vector table for other stm32f1xxx. .word 0 = reserverd */
@@ -89,71 +89,219 @@ vtable: /* ref man vector table for other stm32f1xxx. .word 0 = reserverd */
     .word dma2_chan2_irq_handler
     .word dma2_chan3_irq_handler
     .word dma2_chan4_5_irq_handler
-    /*-------------------------------------------------------------------*/
-    // 48
-    // (Location to boot from for RAM startup)
-    #define boot_ram_base  0xF108F85F
-    .word boot_ram_base
+
     /*
     * Setup weak aliases for each exception handler to the
     * default one. These can be updated later, or just
     * overridden since they're weak refs.
     * The reset_handler is set up separately.
     */
-    .weak NMI_handler
-    .thumb_set NMI_handler,default_interrupt_handler
+    .weak nmi_handler
+    .thumb_set nmi_handler,default_interrupt_handler
+
     .weak hard_fault_handler
     .thumb_set hard_fault_handler,default_interrupt_handler
-    .weak SVC_handler
-    .thumb_set SVC_handler,default_interrupt_handler
-    .weak pending_SV_handler
-    .thumb_set pending_SV_handler,default_interrupt_handler
-    .weak SysTick_handler
-    .thumb_set SysTick_handler,default_interrupt_handler
+
+    .weak mem_manage_handler
+    .thumb_set mem_manage_handler,default_interrupt_handler
+
+    .weak bus_fault_handler
+    .thumb_set bus_fault_handler,default_interrupt_handler
+
+    .weak usage_fault_handler
+    .thumb_set usage_fault_handler,default_interrupt_handler
+
+    .weak svc_handler
+    .thumb_set svc_handler,default_interrupt_handler
+
+    .weak debug_monitor_handler
+    .thumb_set debug_monitor_handler,default_interrupt_handler
+
+    .weak pending_sv_handler
+    .thumb_set pending_sv_handler,default_interrupt_handler
+
+    .weak systick_handler
+    .thumb_set systick_handler,default_interrupt_handler
+
     .weak window_watchdog_irq_handler
     .thumb_set window_watchdog_irq_handler,default_interrupt_handler
-    .weak PVD_irq_handler
-    .thumb_set PVD_irq_handler,default_interrupt_handler
-    .weak RTC_irq_handler
-    .thumb_set RTC_irq_handler,default_interrupt_handler
+
+    .weak pvd_irq_handler
+    .thumb_set pvd_irq_handler,default_interrupt_handler
+
+    .weak tamper_irq_handler
+    .thumb_set tamper_irq_handler,default_interrupt_handler
+
+    .weak rtc_irq_handler
+    .thumb_set rtc_irq_handler,default_interrupt_handler
+
     .weak flash_irq_handler
     .thumb_set flash_irq_handler,default_interrupt_handler
-    .weak RCC_irq_handler
-    .thumb_set RCC_irq_handler,default_interrupt_handler
-    .weak EXTI0_1_irq_handler
-    .thumb_set EXTI0_1_irq_handler,default_interrupt_handler
-    .weak EXTI2_3_irq_handler
-    .thumb_set EXTI2_3_irq_handler,default_interrupt_handler
-    .weak EXTI4_15_irq_handler
-    .thumb_set EXTI4_15_irq_handler,default_interrupt_handler
-    .weak DMA1_chan1_irq_handler
-    .thumb_set DMA1_chan1_irq_handler,default_interrupt_handler
-    .weak DMA1_chan2_3_irq_handler
-    .thumb_set DMA1_chan2_3_irq_handler,default_interrupt_handler
-    .weak DMA1_chan4_5_irq_handler
-    .thumb_set DMA1_chan4_5_irq_handler,default_interrupt_handler
-    .weak ADC1_irq_handler
-    .thumb_set ADC1_irq_handler,default_interrupt_handler
-    .weak TIM1_break_irq_handler
-    .thumb_set TIM1_break_irq_handler,default_interrupt_handler
-    .weak TIM1_CC_irq_handler
-    .thumb_set TIM1_CC_irq_handler,default_interrupt_handler
-    .weak TIM2_irq_handler
-    .thumb_set TIM2_irq_handler,default_interrupt_handler
-    .weak TIM3_irq_handler
-    .thumb_set TIM3_irq_handler,default_interrupt_handler
-    .weak TIM14_irq_handler
-    .thumb_set TIM14_irq_handler,default_interrupt_handler
-    .weak TIM16_irq_handler
-    .thumb_set TIM16_irq_handler,default_interrupt_handler
-    .weak TIM17_irq_handler
-    .thumb_set TIM17_irq_handler,default_interrupt_handler
-    .weak I2C1_irq_handler
-    .thumb_set I2C1_irq_handler,default_interrupt_handler
-    .weak SPI1_irq_handler
-    .thumb_set SPI1_irq_handler,default_interrupt_handler
-    .weak USART1_irq_handler
-    .thumb_set USART1_irq_handler,default_interrupt_handler
+
+    .weak rcc_irq_handler
+    .thumb_set rcc_irq_handler,default_interrupt_handler
+
+    .weak exti0_irq_handler
+    .thumb_set exti0_irq_handler,default_interrupt_handler
+
+    .weak exti1_irq_handler
+    .thumb_set exti1_irq_handler,default_interrupt_handler
+
+    .weak exti2_irq_handler
+    .thumb_set exti2_irq_handler,default_interrupt_handler
+
+    .weak exti3_irq_handler
+    .thumb_set exti3_irq_handler,default_interrupt_handler
+
+    .weak exti4_irq_handler
+    .thumb_set exti4_irq_handler,default_interrupt_handler
+
+    .weak dma1_chan1_irq_handler
+    .thumb_set dma1_chan1_irq_handler,default_interrupt_handler
+
+    .weak dma1_chan2_irq_handler
+    .thumb_set dma1_chan2_irq_handler,default_interrupt_handler
+
+    .weak dma1_chan3_irq_handler
+    .thumb_set dma1_chan3_irq_handler,default_interrupt_handler
+
+    .weak dma1_chan4_irq_handler
+    .thumb_set dma1_chan4_irq_handler,default_interrupt_handler
+
+    .weak dma1_chan5_irq_handler
+    .thumb_set dma1_chan5_irq_handler,default_interrupt_handler
+
+    .weak dma1_chan6_irq_handler
+    .thumb_set dma1_chan6_irq_handler,default_interrupt_handler
+
+    .weak dma1_chan7_irq_handler
+    .thumb_set dma1_chan7_irq_handler,default_interrupt_handler
+
+    .weak adc1_2_irq_handler
+    .thumb_set adc1_2_irq_handler,default_interrupt_handler
+
+    .weak usb_hp_can_tx_irq_handler
+    .thumb_set usb_hp_can_tx_irq_handler,default_interrupt_handler
+
+    .weak usb_lp_can_rx0_irq_handler
+    .thumb_set usb_lp_can_rx0_irq_handler,default_interrupt_handler
+
+    .weak can_rx1_irq_handler
+    .thumb_set can_rx1_irq_handler,default_interrupt_handler
+
+    .weak can_sce_irq_handler
+    .thumb_set can_sce_irq_handler,default_interrupt_handler
+
+    .weak exti9_5_irq_handler
+    .thumb_set exti9_5_irq_handler,default_interrupt_handler
+
+    .weak tim1_brk_irq_handler
+    .thumb_set tim1_brk_irq_handler,default_interrupt_handler
+
+    .weak tim1_up_irq_handler
+    .thumb_set tim1_up_irq_handler,default_interrupt_handler
+
+    .weak tim1_trg_com_irq_handler
+    .thumb_set tim1_trg_com_irq_handler,default_interrupt_handler
+
+    .weak tim1_cc_irq_handler
+    .thumb_set tim1_cc_irq_handler,default_interrupt_handler
+
+    .weak tim2_irq_handler
+    .thumb_set tim2_irq_handler,default_interrupt_handler
+
+    .weak tim3_irq_handler
+    .thumb_set tim3_irq_handler,default_interrupt_handler
+
+    .weak tim4_irq_handler
+    .thumb_set tim4_irq_handler,default_interrupt_handler
+
+    .weak i2c1_ev_irq_handler
+    .thumb_set i2c1_ev_irq_handler,default_interrupt_handler
+
+    .weak i2c1_er_irq_handler
+    .thumb_set i2c1_er_irq_handler,default_interrupt_handler
+
+    .weak i2c2_ev_irq_handler
+    .thumb_set i2c2_ev_irq_handler,default_interrupt_handler
+
+    .weak i2c2_er_irq_handler
+    .thumb_set i2c2_er_irq_handler,default_interrupt_handler
+
+    .weak spi1_irq_handler
+    .thumb_set spi1_irq_handler,default_interrupt_handler
+
+    .weak spi2_irq_handler
+    .thumb_set spi2_irq_handler,default_interrupt_handler
+
+    .weak usart1_irq_handler
+    .thumb_set usart1_irq_handler,default_interrupt_handler
+
+    .weak usart2_irq_handler
+    .thumb_set usart2_irq_handler,default_interrupt_handler
+
+    .weak usart3_irq_handler
+    .thumb_set usart3_irq_handler,default_interrupt_handler
+
+    .weak exti15_10_irq_handler
+    .thumb_set exti15_10_irq_handler,default_interrupt_handler
+
+    .weak rtc_alarm_irq_handler
+    .thumb_set rtc_alarm_irq_handler,default_interrupt_handler
+
+    .weak usb_wakeup_irq_handler
+    .thumb_set usb_wakeup_irq_handler,default_interrupt_handler
+
+    .weak tim8_brk_irq_handler
+    .thumb_set tim8_brk_irq_handler,default_interrupt_handler
+
+    .weak tim8_up_irq_handler
+    .thumb_set tim8_up_irq_handler,default_interrupt_handler
+
+    .weak tim8_trg_com_irq_handler
+    .thumb_set tim8_trg_com_irq_handler,default_interrupt_handler
+
+    .weak tim8_cc_irq_handler
+    .thumb_set tim8_cc_irq_handler,default_interrupt_handler
+
+    .weak adc3_irq_handler
+    .thumb_set adc3_irq_handler,default_interrupt_handler
+
+    .weak fsmc_irq_handler
+    .thumb_set fsmc_irq_handler,default_interrupt_handler
+
+    .weak sdio_irq_handler
+    .thumb_set sdio_irq_handler,default_interrupt_handler
+
+    .weak tim5_irq_handler
+    .thumb_set tim5_irq_handler,default_interrupt_handler
+
+    .weak spi3_irq_handler
+    .thumb_set spi3_irq_handler,default_interrupt_handler
+
+    .weak uart4_irq_handler
+    .thumb_set uart4_irq_handler,default_interrupt_handler
+
+    .weak uart5_irq_handler
+    .thumb_set uart5_irq_handler,default_interrupt_handler
+
+    .weak tim6_irq_handler
+    .thumb_set tim6_irq_handler,default_interrupt_handler
+
+    .weak tim7_irq_handler
+    .thumb_set tim7_irq_handler,default_interrupt_handler
+
+    .weak dma2_chan1_irq_handler
+    .thumb_set dma2_chan1_irq_handler,default_interrupt_handler
+
+    .weak dma2_chan2_irq_handler
+    .thumb_set dma2_chan2_irq_handler,default_interrupt_handler
+
+    .weak dma2_chan3_irq_handler
+    .thumb_set dma2_chan3_irq_handler,default_interrupt_handler
+
+    .weak dma2_chan4_5_irq_handler
+    .thumb_set dma2_chan4_5_irq_handler,default_interrupt_handler
 .size vtable, .-vtable
 /*
     * A 'Default' interrupt handler. This is where interrupts
