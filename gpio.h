@@ -3,6 +3,9 @@
 
 #include "general_includes.h"
 
+/*  Idee: 1x struct für gesamten Port bereitstellen. Hier dann reinschreiben. Dann 1 Kommando,
+    um alles an die echten Adressen zu schreiben */
+
 /* Defines */
 #define OFFSET_GPIO_PORT_A 0x40010800
 #define OFFSET_GPIO_PORT_B 0x40010C00
@@ -16,6 +19,9 @@
 #define OFFSET_GPIO_BSRR 0x10
 #define OFFSET_GPIO_BRR 0x14
 #define OFFSET_GPIO_LOCK 0x18
+
+#define GPIO_CRL_REGISTER_SIZE 32
+#define GPIO_CRL_PIN_CFG_SIZE 4
 
 typedef enum
 {
@@ -33,7 +39,7 @@ typedef enum
     IO_OUT_OPEN_DRAIN = 0b0110, // standard: 2MHz output
     IO_AF_PUSH_PULL = 0b1010,   // standard: 2MHz output
     IO_AF_OPEN_DRAIN = 0b1110     // standard: 2MHz output
-} GPIO_IO_Mode;
+} GPIO_Pin_IO_Mode;
 
 typedef enum
 {
@@ -78,12 +84,9 @@ typedef struct
 } GPIO_Port_Config;
 
 /* Functions */
-
-bool write_gpio_port_configuration(GPIO_Port_Names port, GPIO_Port_Config config); //Check after written: True or False
-bool write_gpio_pin_configuration(GPIO_Port_Names port, GPIO_Pins pin, GPIO_Port_Config config); //Check after written: True or False
-uint32_t read_gpio_port_configuration(GPIO_Port_Names port);
+bool write_gpio_port_config_to_register(GPIO_Port_Names port, GPIO_Port_Config *config); // Check after written: True or False
+bool write_gpio_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cfg, GPIO_Port_Config *config);
+uint32_t read_gpio_port_config(GPIO_Port_Names port);
 uint32_t map_gpio_port_to_address_offset(GPIO_Port_Names port);
-
-
 
 #endif //GPIO_H
