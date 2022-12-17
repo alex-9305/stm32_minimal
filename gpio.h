@@ -1,16 +1,16 @@
 #ifndef GPIO_H
 #define GPIO_H
 
-#include "general_includes.h"
+#include "general_functions.h"
 
 /*  Idee: 1x struct für gesamten Port bereitstellen. Hier dann reinschreiben. Dann 1 Kommando,
     um alles an die echten Adressen zu schreiben */
 
 /* Defines */
-#define OFFSET_GPIO_PORT_A 0x40010800
-#define OFFSET_GPIO_PORT_B 0x40010C00
-#define OFFSET_GPIO_PORT_C 0x40011000
-#define OFFSET_GPIO_PORT_D 0x40011400
+#define OFFSET_GPIO_PORT_A 0x10800
+#define OFFSET_GPIO_PORT_B 0x10C00
+#define OFFSET_GPIO_PORT_C 0x11000
+#define OFFSET_GPIO_PORT_D 0x11400
 
 #define OFFSET_GPIO_CRL 0x00
 #define OFFSET_GPIO_CRH 0x04
@@ -20,8 +20,8 @@
 #define OFFSET_GPIO_BRR 0x14
 #define OFFSET_GPIO_LOCK 0x18
 
-#define GPIO_CRL_REGISTER_SIZE 32
-#define GPIO_CRL_PIN_CFG_SIZE 4
+#define GPIO_CRL_REGISTER_SIZE 32u
+#define GPIO_CRL_PIN_CFG_SIZE 4u
 
 typedef enum
 {
@@ -46,10 +46,7 @@ typedef enum
     GPIO_PORT_A = 0u,
     GPIO_PORT_B,
     GPIO_PORT_C,
-    GPIO_PORT_D,
-    GPIO_PORT_E,
-    GPIO_PORT_F,
-    GPIO_PORT_G
+    GPIO_PORT_D
 } GPIO_Port_Names;
 
 typedef enum
@@ -79,14 +76,14 @@ typedef struct
     uint32_t port_data_idr;    // lower data register
     uint32_t port_data_odr;    // higher data register
     uint32_t port_set_reset_bsrr;    // set/reset register
-    uint16_t port_reset_brr;    // reset register
+    uint32_t port_reset_brr;    // reset register
     uint32_t port_lock_lckr;    // locking register
 } GPIO_Port_Config;
 
 /* Functions */
 bool write_gpio_port_config_to_register(GPIO_Port_Names port, GPIO_Port_Config *config); // Check after written: True or False
 bool write_gpio_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cfg, GPIO_Port_Config *config);
-uint32_t read_gpio_port_config(GPIO_Port_Names port);
-uint32_t map_gpio_port_to_address_offset(GPIO_Port_Names port);
+GPIO_Port_Config read_gpio_port_config_to_struct(GPIO_Port_Names port);
+uint32_t map_gpio_port_to_address(GPIO_Port_Names port);
 
 #endif //GPIO_H
