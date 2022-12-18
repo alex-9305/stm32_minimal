@@ -1,6 +1,6 @@
 #include "gpio.h"
 
-bool write_gpio_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cfg, GPIO_Port_Config *config)
+bool gpio_write_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cfg, GPIO_Port_Config *config)
 /*
     Write pin-configuration to port configuration.
     Needs to be done before port configuration is written into adress space.
@@ -37,7 +37,7 @@ bool write_gpio_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cf
     }
 }
 
-uint32_t map_gpio_port_to_address(GPIO_Port_Names port)
+uint32_t gpio_map_port_to_address(GPIO_Port_Names port)
 /*
     Calculate address of given port and return it.
     port: Given port (see GPIO_Port_Names)
@@ -49,25 +49,25 @@ uint32_t map_gpio_port_to_address(GPIO_Port_Names port)
     {
         case GPIO_PORT_A:
         {
-            return OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_A;
+            return OFFSET_GPIO_PORT_A;
             break;
         }
 
         case GPIO_PORT_B:
         {
-            return OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_B;
+            return OFFSET_GPIO_PORT_B;
             break;
         }
 
         case GPIO_PORT_C:
         {
-            return OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_C;
+            return OFFSET_GPIO_PORT_C;
             break;
         }
 
         case GPIO_PORT_D:
         {
-            return OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_D;
+            return OFFSET_GPIO_PORT_D;
             break;
         }
 
@@ -79,7 +79,7 @@ uint32_t map_gpio_port_to_address(GPIO_Port_Names port)
     }
 }
 
-GPIO_Port_Config read_gpio_port_config_to_struct(GPIO_Port_Names port)
+GPIO_Port_Config gpio_read_port_config_to_struct(GPIO_Port_Names port)
 /*
     Read port config from address space.
     port: Given port (see GPIO_Port_Names)

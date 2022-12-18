@@ -14,25 +14,25 @@ static uint32_t _map_gpio_port_to_address(GPIO_Port_Names port)
     {
         case GPIO_PORT_A:
         {
-            return OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_A;
+            return OFFSET_GPIO_PORT_A;
             break;
         }
 
         case GPIO_PORT_B:
         {
-            return OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_B;
+            return OFFSET_GPIO_PORT_B;
             break;
         }
 
         case GPIO_PORT_C:
         {
-            return OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_C;
+            return OFFSET_GPIO_PORT_C;
             break;
         }
 
         case GPIO_PORT_D:
         {
-            return OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_D;
+            return OFFSET_GPIO_PORT_D;
             break;
         }
 

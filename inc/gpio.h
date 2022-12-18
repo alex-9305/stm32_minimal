@@ -7,10 +7,10 @@
     um alles an die echten Adressen zu schreiben */
 
 /* Defines */
-#define OFFSET_GPIO_PORT_A 0x10800
-#define OFFSET_GPIO_PORT_B 0x10C00
-#define OFFSET_GPIO_PORT_C 0x11000
-#define OFFSET_GPIO_PORT_D 0x11400
+#define OFFSET_GPIO_PORT_A (OFFSET_PERIPHERALS + 0x10800)
+#define OFFSET_GPIO_PORT_B (OFFSET_PERIPHERALS + 0x10C00)
+#define OFFSET_GPIO_PORT_C (OFFSET_PERIPHERALS + 0x11000)
+#define OFFSET_GPIO_PORT_D (OFFSET_PERIPHERALS + 0x11400)
 
 #define OFFSET_GPIO_CRL 0x00
 #define OFFSET_GPIO_CRH 0x04
@@ -81,9 +81,9 @@ typedef struct
 } GPIO_Port_Config;
 
 /* Functions */
-bool write_gpio_port_config_to_register(GPIO_Port_Names port, GPIO_Port_Config *config); // Check after written: True or False
-bool write_gpio_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cfg, GPIO_Port_Config *config);
-GPIO_Port_Config read_gpio_port_config_to_struct(GPIO_Port_Names port);
-uint32_t map_gpio_port_to_address(GPIO_Port_Names port);
+bool gpio_write_port_config_to_register(GPIO_Port_Names port, GPIO_Port_Config *config); // Check after written: True or False
+bool gpio_write_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cfg, GPIO_Port_Config *config);
+GPIO_Port_Config gpio_read_port_config_to_struct(GPIO_Port_Names port);
+uint32_t gpio_map_port_to_address(GPIO_Port_Names port);
 
 #endif //GPIO_H

@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
-#include "gpio.h"
 #include "general_functions.h"
+#include "gpio.h"
+#include "rcc.h"
 
 #endif // MAIN_H
