@@ -10,14 +10,14 @@ uint32_t read_uint32_from_address_space(uint32_t address)
 */
 {
     // TODO: DEFINE READABLE SPACE
-    uint32_t *read_data = address;
+    const uint32_t *read_data = (const uint32_t *)address;
     return *read_data;
 }
 
 int main(void)
 {
     uint32_t test_address = 0;
-    test_address = read_uint32_from_address_space(OFFSET_PERIPHERALS + OFFSET_GPIO_PORT_A);
+    test_address = read_uint32_from_address_space(0x0150);
     printf("Test 1: Return = %d\n", test_address);
     return 0;
 }
