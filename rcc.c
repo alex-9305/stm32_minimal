@@ -59,6 +59,11 @@ bool rcc_write_gpio_config_to_registers(RCC_Config *config)
     uint32_t *write_pointer = (uint32_t *)(OFFSET_RCC + OFFSET_RCC_APB2ENR);
     *write_pointer = write_data;
 
+    // //RESET. REMOVE AFTER TEST
+    // uint32_t write_reset = 4u;
+    // uint32_t *write_reset_pointer = (uint32_t *)(OFFSET_RCC + OFFSET_RCC_APB2RSTR);
+    // *write_reset_pointer = write_reset;
+
     if (*write_pointer == config->rcc_apb2enr)
     {
         return true;
