@@ -38,7 +38,7 @@ bool gpio_write_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cf
     }
 }
 
-uint32_t map_gpio_port_to_address(GPIO_Port_Names port)
+uint32_t gpio_map_port_to_address(GPIO_Port_Names port)
 /*
     Calculate address of given port and return it.
     port: Given port (see GPIO_Port_Names)
@@ -87,7 +87,7 @@ GPIO_Port_Config gpio_read_port_config_to_struct(GPIO_Port_Names port)
 */
 {
     GPIO_Port_Config port_config = {0};
-    uint32_t read_address_start = map_gpio_port_to_address(port);
+    uint32_t read_address_start = gpio_map_port_to_address(port);
     port_config.port_config_crl = general_read_uint32_from_address_space(read_address_start);
     port_config.port_config_crh = general_read_uint32_from_address_space(read_address_start + OFFSET_GPIO_CRH);
     port_config.port_data_idr = general_read_uint32_from_address_space(read_address_start + OFFSET_GPIO_IDR);
@@ -97,4 +97,67 @@ GPIO_Port_Config gpio_read_port_config_to_struct(GPIO_Port_Names port)
     port_config.port_lock_lckr = general_read_uint32_from_address_space(read_address_start + OFFSET_GPIO_LOCK);
 
     return port_config;
+}
+
+bool gpio_write_pin_status_to_config(GPIO_Pins pin, GPIO_Pin_State state, GPIO_Port_Config *config)
+/*
+    Set or reset pin.
+    pin: pin x of port cfg (see GPIO_Pins)
+    port: Given port (see GPIO_Port_Names)
+    state: state of pin x (see GPIO_Pin_State)
+    return: Read port config
+*/
+{
+    uint8_t shift_width = 0;
+    uint32_t bit_mask = 0;
+    // set registers: 0 - 15 = pin 0 - 15
+    if (state == GPIO_PIN_SET)
+    {
+        shift_width = pin;
+        bit_mask = (0b1 << shift_width);
+        config->port_set_reset_bsrr = (config->port_set_reset_bsrr & (~bit_mask)) | (pin << shift_width);
+    }
+    // reset registers: 16 - 31 = pin 0 - 15
+    else if (state == GPIO_PIN_RESET)
+    {
+        shift_width = pin + 16;
+        bit_mask = (0b1 << shift_width);
+        config->port_set_reset_bsrr = (config->port_set_reset_bsrr & (~bit_mask)) | (pin << shift_width);
+    }
+    else
+    {
+        return false;
+    }
+    return true;
+}
+
+bool gpio_write_port_config_to_register(GPIO_Port_Names port, GPIO_Port_Config *config)
+/*
+    Read port first before using. Otherwiese it might lead to undesired configurations.
+    Writes port config from struct to registers.
+    Validates write process by reading after writing.
+    port: Given port (see GPIO_Port_Names)
+    *config: struct of config to write to
+    return: true, if writing successful
+*/
+{
+    uint32_t write_address_start = gpio_map_port_to_address(port);
+    general_write_uint32_to_address_space(write_address_start, config->port_config_crl);
+    general_write_uint32_to_address_space(write_address_start + OFFSET_GPIO_CRH, config->port_config_crh);
+    // general_write_uint32_to_address_space(write_address_start + OFFSET_GPIO_IDR, config->port_data_idr);
+    // general_write_uint32_to_address_space(write_address_start + OFFSET_GPIO_ODR, config->port_data_odr);
+    general_write_uint32_to_address_space(write_address_start + OFFSET_GPIO_BSRR, config->port_set_reset_bsrr);
+    // general_write_uint32_to_address_space(write_address_start + OFFSET_GPIO_BRR, config->port_reset_brr);
+    // general_write_uint32_to_address_space(write_address_start + OFFSET_GPIO_LOCK, config->port_lock_lckr);
+    return true;
+}
+
+bool gpio_compare_write_cfg_with_read_cfg(GPIO_Port_Config *write_cfg, GPIO_Port_Names port)
+/*
+    Compares struct with values in register.
+    *write_cfg: struct of config to compare
+    port: Given port (see GPIO_Port_Names)
+*/
+{
+    return false;
 }

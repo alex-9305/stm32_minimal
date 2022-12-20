@@ -7,5 +7,6 @@
 
 uint32_t general_read_uint32_from_address_space(uint32_t address);
 uint16_t general_read_uint16_from_address_space(uint32_t address);
+void general_write_uint32_to_address_space(uint32_t address, uint32_t value);
 
 #endif // GENERAL_FUNCTIONS_H
