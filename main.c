@@ -1,7 +1,7 @@
 #include "main.h"
 /* Main program. */
 // TODO: ASSERTS FÜR FUNKTIONEN FÜR EXC HANDLING
-// Umbau: Pin direkt per Speicherzugriff umändern. Da nur 32 bit Zugriff: Erst lesen, dann bit ändern,
+// Umbau: Pin Status direkt per Speicherzugriff umändern. Da nur 32 bit Zugriff: Erst lesen, dann bit ändern,
 // Dann schreiben, dann prüfen
 
 static GPIO_Port_Config gpio_port_c = {0};
