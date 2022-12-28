@@ -81,11 +81,12 @@ typedef struct
 } GPIO_Port_Config;
 
 /* Functions */
-bool gpio_write_port_config_to_register(GPIO_Port_Names port, GPIO_Port_Config *config); // Check after written: True or False
-bool gpio_write_pin_config_to_port_config(GPIO_Pins pin, GPIO_Pin_IO_Mode pin_cfg, GPIO_Port_Config *config);
+bool gpio_write_port_config_to_register(GPIO_Port_Names port, GPIO_Port_Config *config);
+bool gpio_write_pin_config_to_register(GPIO_Pins pin, GPIO_Port_Names port, GPIO_Pin_IO_Mode pin_cfg);
 GPIO_Port_Config gpio_read_port_config_to_struct(GPIO_Port_Names port);
 bool gpio_write_pin_status_to_config(GPIO_Pins pin, GPIO_Pin_State state, GPIO_Port_Config *config);
 uint32_t gpio_map_port_to_address(GPIO_Port_Names port);
 bool gpio_compare_write_cfg_with_read_cfg(GPIO_Port_Config *write_cfg, GPIO_Port_Names port);
+
 
 #endif //GPIO_H
