@@ -46,8 +46,8 @@ uint32_t general_apply_bitmask_to_uint32_t(uint32_t overwrite_data, uint32_t inp
 */
 {
     uint32_t output_data = 0;
-    bit_mask = (bit_mask << shift_width);
-    output_data = (overwrite_data & (~bit_mask)) | (input_data << shift_width);
+    uint32_t use_bit_mask = (bit_mask << shift_width);
+    output_data = (overwrite_data & (~use_bit_mask)) | (input_data << shift_width);
 
     return output_data;
 }

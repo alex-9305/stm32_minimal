@@ -10,7 +10,7 @@ bool gpio_write_pin_config_to_register(GPIO_Pins pin, GPIO_Port_Names port, GPIO
 {
     uint8_t pin_cfg_bit_position = (pin << 2); // Multiply by 4 to get to correct position
     uint8_t shift_width = 0;
-    uint32_t bit_mask = 0;
+    uint32_t bit_mask = 0b1111;
     GPIO_Port_Config config = {0};
     // only allow correct values
     if ((pin_cfg_bit_position == 0) || ((pin_cfg_bit_position % GPIO_CRL_PIN_CFG_SIZE) == 0))
@@ -19,7 +19,7 @@ bool gpio_write_pin_config_to_register(GPIO_Pins pin, GPIO_Port_Names port, GPIO
         // write cfg to CRL without changing other pin configs
         if (pin_cfg_bit_position <= (GPIO_CRL_REGISTER_SIZE - GPIO_CRL_PIN_CFG_SIZE))
         {
-            // shift_width = pin * GPIO_CRL_PIN_CFG_SIZE;
+            shift_width = pin * GPIO_CRL_PIN_CFG_SIZE;
             // bit_mask = (0b1111 << shift_width);
             // config.port_config_crl = (config.port_config_crl & (~bit_mask)) | (pin_cfg << shift_width);
             config.port_config_crl = general_apply_bitmask_to_uint32_t(config.port_config_crl, pin_cfg, bit_mask, shift_width);
@@ -27,7 +27,7 @@ bool gpio_write_pin_config_to_register(GPIO_Pins pin, GPIO_Port_Names port, GPIO
         // write cfg to CRH without changing other pin configs
         else
         {
-            // shift_width = (pin * GPIO_CRL_PIN_CFG_SIZE) - (GPIO_CRL_REGISTER_SIZE / GPIO_CRL_PIN_CFG_SIZE * GPIO_CRL_PIN_CFG_SIZE);
+            shift_width = (pin * GPIO_CRL_PIN_CFG_SIZE) - GPIO_CRL_REGISTER_SIZE;
             // bit_mask = (0b1111 << shift_width);
             // config.port_config_crh = (config.port_config_crh & (~bit_mask)) | (pin_cfg << shift_width);
             config.port_config_crh = general_apply_bitmask_to_uint32_t(config.port_config_crh, pin_cfg, bit_mask, shift_width);

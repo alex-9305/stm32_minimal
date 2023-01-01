@@ -53,16 +53,106 @@ uint8_t rcc_get_gpio_bit_enable_position(RCC_GPIO_Peripherals peripheral)
     }
 }
 
+uint32_t rcc_map_ahb_clk_status_to_address(RCC_Enable_Registers periph)
+/*
+    Calculate address of given peripheral and return it.
+    periph: Periph to map to (see RCC_Enable_Registers)
+    return: RCC ahb address
+*/
+{
+    return (OFFSET_RCC + OFFSET_RCC_AHBENR + periph);
+}
+
+uint32_t rcc_map_apb2_clk_status_to_address(RCC_Enable_Registers periph)
+/*
+    Calculate address of given peripheral and return it.
+    periph: Periph to map to (see RCC_Enable_Registers)
+    return: RCC apb2 address
+*/
+{
+    return (OFFSET_RCC + OFFSET_RCC_APB2ENR + (periph - RCC_AHB_PERIPH_AMOUNT));
+}
+
+uint32_t rcc_map_apb1_clk_status_to_address(RCC_Enable_Registers periph)
+/*
+    Calculate address of given peripheral and return it.
+    periph: Periph to map to (see RCC_Enable_Registers)
+    return: RCC apb1 address
+*/
+{
+    return (OFFSET_RCC + OFFSET_RCC_APB1ENR + (periph - RCC_AHB_PERIPH_AMOUNT - RCC_APB2_PERIPH_AMOUNT));
+}
+
+uint32_t rcc_map_clk_status_to_address(RCC_Enable_Registers periph)
+/*
+    Calculate address of given peripheral and return it.
+    periph: Periph to map to (see RCC_Enable_Registers)
+    return: RCC address
+*/
+{
+    uint32_t address = 0;
+    if (periph < (RCC_AHB_PERIPH_AMOUNT))
+    {
+        address = rcc_map_ahb_clk_status_to_address(periph);
+    }
+    else if ((periph >= (RCC_AHB_PERIPH_AMOUNT)) && (periph < (RCC_AHB_PERIPH_AMOUNT + RCC_APB2_PERIPH_AMOUNT)))
+    {
+        address = rcc_map_apb2_clk_status_to_address(periph);
+    }
+    else if ((periph >= (RCC_AHB_PERIPH_AMOUNT + RCC_APB2_PERIPH_AMOUNT)) && (periph < (RCC_AHB_PERIPH_AMOUNT + RCC_APB2_PERIPH_AMOUNT + RCC_APB1_PERIPH_AMOUNT)))
+    {
+        address = rcc_map_apb1_clk_status_to_address(periph);
+    }
+    else
+    {
+        address = 0xFFFFFFFF;
+    }
+    return address;
+}
+
+RCC_Config rcc_read_config_to_struct(void)
+/*
+    Read current rcc config from mcu and return as struct
+    return: struct
+*/
+{
+    RCC_Config config = {0};
+    uint32_t read_address_start = OFFSET_RCC;
+    config.rcc_cr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_CR);
+    config.rcc_cfgr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_CFGR);
+    config.rcc_cir = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_CIR);
+    config.rcc_apb2rstr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_APB2RSTR);
+    config.rcc_apb1rstr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_APB1RSTR);
+    config.rcc_ahbenr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_AHBENR);
+    config.rcc_apb2enr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_APB2ENR);
+    config.rcc_apb1enr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_APB1ENR);
+    config.rcc_bdcr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_BDCR);
+    config.rcc_csr = general_read_uint32_from_address_space(read_address_start + OFFSET_RCC_CSR);
+
+    return config;
+}
+
+bool rcc_set_clk_for_periph(RCC_Enable_Registers periph, RCC_Enable_Disable status)
+/*
+    Set status of periph register
+    periph: Peripheral (see RCC_Enable_Registers)
+    status: Enable or disable (see RCC_Enable_Disable)
+    return: true, if successful
+*/
+{
+
+    uint32_t rcc_periph_address = rcc_map_clk_status_to_address(periph);
+    RCC_Config config = rcc_read_config_to_struct();
+    // TODO: bit in cfg schreiben, bit in addressraum schreiben, beide vergleichen
+
+
+}
+
 bool rcc_write_gpio_config_to_registers(RCC_Config *config)
 {
     uint32_t write_data = config->rcc_apb2enr;
     uint32_t *write_pointer = (uint32_t *)(OFFSET_RCC + OFFSET_RCC_APB2ENR);
     *write_pointer = write_data;
-
-    // //RESET. REMOVE AFTER TEST
-    // uint32_t write_reset = 4u;
-    // uint32_t *write_reset_pointer = (uint32_t *)(OFFSET_RCC + OFFSET_RCC_APB2RSTR);
-    // *write_reset_pointer = write_reset;
 
     if (*write_pointer == config->rcc_apb2enr)
     {

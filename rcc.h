@@ -16,6 +16,10 @@
 #define OFFSET_RCC_BDCR 0x20
 #define OFFSET_RCC_CSR 0x24
 
+#define RCC_AHB_PERIPH_AMOUNT 32u
+#define RCC_APB2_PERIPH_AMOUNT RCC_AHB_PERIPH_AMOUNT
+#define RCC_APB1_PERIPH_AMOUNT RCC_AHB_PERIPH_AMOUNT
+
 typedef enum
 {
     RCC_Disable = 0u,
@@ -29,6 +33,58 @@ typedef enum
     RCC_GPIO_PORT_C,
     RCC_GPIO_PORT_D
 } RCC_GPIO_Peripherals;
+
+typedef enum
+{
+    RCC_Enable_DMA_1 = 0u,
+    RCC_Enable_DMA_2,
+    RCC_Enable_SRAM,
+    RCC_Enable_FLITF = 4u,
+    RCC_Enable_CRC = 6u,
+    RCC_Enable_FSMC = 8u,
+    RCC_Enable_SDIO = 10u,
+    RCC_Enable_AFIO = 32u,
+    RCC_Enable_IOPA = 34u,
+    RCC_Enable_IOPB,
+    RCC_Enable_IOPC,
+    RCC_Enable_IOPD,
+    RCC_Enable_IOPE,
+    RCC_Enable_IOPF,
+    RCC_Enable_IOPG,
+    RCC_Enable_ADC_1,
+    RCC_Enable_ADC_2,
+    RCC_Enable_TIM_1,
+    RCC_Enable_SPI_1,
+    RCC_Enable_TIM_8,
+    RCC_Enable_USART_1,
+    RCC_Enable_ADC_3,
+    RCC_Enable_TIM_9 = 51u,
+    RCC_Enable_TIM_10,
+    RCC_Enable_TIM_11,
+    RCC_Enable_TIM_2 = 64u,
+    RCC_Enable_TIM_3,
+    RCC_Enable_TIM_4,
+    RCC_Enable_TIM_5,
+    RCC_Enable_TIM_6,
+    RCC_Enable_TIM_7,
+    RCC_Enable_TIM_12,
+    RCC_Enable_TIM_13,
+    RCC_Enable_TIM_14,
+    RCC_Enable_WWD_GEN = 75u,
+    RCC_Enable_SPI_2 = 78u,
+    RCC_Enable_SPI_3,
+    RCC_Enable_USART_2 = 81u,
+    RCC_Enable_USART_3,
+    RCC_Enable_USART_4,
+    RCC_Enable_USART_5,
+    RCC_Enable_I2C_1,
+    RCC_Enable_I2C_2,
+    RCC_Enable_USB,
+    RCC_Enable_CAN = 89u,
+    RCC_Enable_BKP = 91u,
+    RCC_Enable_PWR,
+    RCC_Enable_DAC
+} RCC_Enable_Registers;
 
 typedef struct
 {
@@ -46,7 +102,8 @@ typedef struct
 
 void rcc_write_gpio_status_to_config(RCC_Config *config, RCC_GPIO_Peripherals peripheral, RCC_Enable_Disable status);
 uint8_t rcc_get_gpio_bit_enable_position(RCC_GPIO_Peripherals peripheral);
-bool rcc_write_gpio_config_to_registers(RCC_Config *config);
+bool rcc_set_clk_for_periph(RCC_Enable_Registers periph, RCC_Enable_Disable status);
+uint32_t rcc_map_clk_status_to_address(RCC_Enable_Registers periph);
 
 
 #endif // RCC_H
