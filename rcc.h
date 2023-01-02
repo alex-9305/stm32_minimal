@@ -15,10 +15,10 @@
 #define OFFSET_RCC_APB1ENR 0x1C
 #define OFFSET_RCC_BDCR 0x20
 #define OFFSET_RCC_CSR 0x24
-
-#define RCC_AHB_PERIPH_AMOUNT 32u
-#define RCC_APB2_PERIPH_AMOUNT RCC_AHB_PERIPH_AMOUNT
-#define RCC_APB1_PERIPH_AMOUNT RCC_AHB_PERIPH_AMOUNT
+#define RCC_CLK_SET_REGISTER_SIZE 32u
+#define RCC_AHB_PERIPH_OFFSET 0u
+#define RCC_APB2_PERIPH_OFFSET 32u
+#define RCC_APB1_PERIPH_OFFSET 64u
 
 typedef enum
 {
@@ -100,10 +100,12 @@ typedef struct
     uint32_t rcc_csr; // control/status register
 } RCC_Config;
 
-void rcc_write_gpio_status_to_config(RCC_Config *config, RCC_GPIO_Peripherals peripheral, RCC_Enable_Disable status);
-uint8_t rcc_get_gpio_bit_enable_position(RCC_GPIO_Peripherals peripheral);
-bool rcc_set_clk_for_periph(RCC_Enable_Registers periph, RCC_Enable_Disable status);
+uint32_t rcc_map_ahb_clk_status_to_address(RCC_Enable_Registers periph);
+uint32_t rcc_map_apb2_clk_status_to_address(RCC_Enable_Registers periph);
+uint32_t rcc_map_apb1_clk_status_to_address(RCC_Enable_Registers periph);
+RCC_Config rcc_read_config_to_struct(void);
 uint32_t rcc_map_clk_status_to_address(RCC_Enable_Registers periph);
-
+bool rcc_write_clk_settings_to_register(RCC_Config *config, RCC_Enable_Registers periph, RCC_Enable_Disable status, uint32_t rcc_periph_address);
+bool rcc_set_clk_for_periph(RCC_Enable_Registers periph, RCC_Enable_Disable status);
 
 #endif // RCC_H
