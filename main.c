@@ -8,7 +8,6 @@ static RCC_Config rcc_cfg = {0};
 
 int main(void)
 {
-    // rcc_write_gpio_status_to_config(&rcc_cfg, RCC_GPIO_PORT_C, RCC_Enable);
     bool rcc_written = rcc_set_clk_for_periph(RCC_Enable_IOPC, RCC_Enable);
     bool cfg_written = gpio_write_pin_config_to_register(GPIO_PIN_13, GPIO_PORT_C, IO_OUT_PUSH_PULL);
     cfg_written = gpio_write_pin_status_to_config(GPIO_PIN_13, GPIO_PIN_SET, &gpio_port_c);
