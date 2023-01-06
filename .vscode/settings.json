@@ -3,6 +3,7 @@
         "stdio.h": "c",
         "gpio.h": "c",
         "general_includes.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "general_functions.h": "c"
     }
 }
